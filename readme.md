@@ -67,7 +67,7 @@ StreamServiceClient client = DefaultStreamServiceClient.bind(host,timeout,userna
 ```
 
 
-Use of the interfaces is demonstrated in an [example Java client](http://www8.cs.umu.se/kurser/5DV186/HT17/assignments/1/ExampleClient.java)The example can be run with a shell command similar to this
+Use of the interfaces is demonstrated in an [example Java client](http://www8.cs.umu.se/kurser/5DV186/HT17/assignments/1/ExampleClient.java). The example can be run with a shell command similar to this
 ```
 java -cp "5dv186a1.jar" se.umu.cs._5dv186.a1.client.ExampleClient harry.cs.umu.se 1000 test
 ```
@@ -86,7 +86,8 @@ For convenience, a service host list can be accessed through
 String[] hosts = StreamServiceDiscovery.SINGLETON.findHosts();
 ```
 
-This API is implemented in communication stubs in a provided UDP-based communication framework that is aimed to hide (some) low-level communication details and raise the abstraction level of the system communication. Note that while the API defines blocking methods, it relies on an unreliable communication model, and users of the handed-out API (i.e. the students) need to manage issues arising from packet drops, e.g., handling packet resends using threading and invocation timeouts.
+This API is implemented in communication stubs in a provided UDP-based communication framework that is aimed to hide (some) low-level communication details and raise the abstraction level of the system communication.
+Note that while the API defines blocking methods, it relies on an unreliable communication model, and users of the handed-out API (i.e. the students) need to manage issues arising from packet drops, e.g., handling packet resends using threading and invocation timeouts.
 As noted in the interface, students are to provide their CS username as a parameter when instantiating and using the provided communication stubs. This is required as the provided application services contain individually configurable network quality rate limitations for link latencies and packet drop rates that are used to simulate variations in network link qualities.
 The task of the student is to (using the provided communication stubs) implement video service clients and experimentally estimate the following performance metrics:
 
@@ -97,7 +98,7 @@ The task of the student is to (using the provided communication stubs) implement
 (average) frame throughput | application | frames per second (fps)
 bandwidth utilization (total network footprint) | application | bits per second (bps)
 
-Student solutions shall implement a provided FrameAccessor interface (all referenced interfaces in the file), as well as construct a factory class that can be used to instantiate the interface (hint: one factory class per FrameAccessor implementation makes life easier). The factory classes shall implement the FrameAccessor.Factory interface and need to have a publicly accessible default constructor (a public constructor with no parameters).
+Student solutions shall implement a provided [FrameAccessor interface](http://www8.cs.umu.se/kurser/5DV186/HT17/assignments/1/FrameAccessor.java) (all referenced interfaces in the file), as well as construct a factory class that can be used to instantiate the interface (hint: one factory class per FrameAccessor implementation makes life easier). The factory classes shall implement the FrameAccessor.Factory interface and need to have a publicly accessible default constructor (a public constructor with no parameters).
 
 A note on exceptions: The FrameAccessor interface is designed to support multiple different implementation patterns, and due to this, all potentially data-fetching methods list exceptions in the interface. However, this does not mean that a particular FrameAccessor implementation is expected to use data fetching methods (i.e. the underlying StreamSocketClient.getBlock()) in each of these methods - in fact, most FrameAccessor implementations will not.
 
@@ -110,3 +111,6 @@ Students shall provide an automated build script called build.sh (that could, e.
 
 In addition to these files, the student shall also provide a text file named fqns.txt that specifies the fully qualified class names (class names including full package names, e.g., se.umu.cs._5dv186.a1.username.MyFrameAccessorFactory) of your FrameAccessor.Factory implementation class(es). For solutions with more than one factory class, specify one fully qualified class name per line in the file.
 
+## Development Environment
+
+For this assignment, students are provided a [UDP-based communication framework](http://www8.cs.umu.se/kurser/5DV186/HT17/downloads/5dv186a1.jar).
