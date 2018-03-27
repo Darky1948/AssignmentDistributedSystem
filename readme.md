@@ -18,7 +18,8 @@ In this assignment, the student are given the task of implementing a simple clie
 
 Each service hosts a set of streams (identified by name), and each stream is homogeneous in format (all frames and blocks are the same size within a stream). To simplify reasoning about system performance trade-offs pixel blocks are transmitted in raw format (i.e. no video streaming or compression formats are used) in the assignment application. Note that this is an unrealistic artificial simplification that is unlikely to be found in real video streaming applications.
 
-A simple framework that abstracts low-level system communication details is provided to allow the student to focus on the analysis parts of the assignment. The framework exposes a set of client stubs that can be used to communicate with services by exchanging UDP-based messages in a request-response pattern. The client stubs provide a very simple API that expose a set of data types and methods to retrieve video stream data from a host:
+A simple framework that abstracts low-level system communication details is provided to allow the student to focus on the analysis parts of the assignment. 
+The framework exposes a set of client stubs that can be used to communicate with services by exchanging [UDP-based](https://en.wikipedia.org/wiki/User_Datagram_Protocol) messages in a request-response pattern. The client stubs provide a very simple API that expose a set of data types and methods to retrieve video stream data from a host:
 
 ```
 class Pixel
