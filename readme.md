@@ -1,87 +1,14 @@
-# Project Title
+# Assignment 1 Distributed System
 
-One Paragraph of project description goes here
+The purpose of this assignment is to introduce the student to high-level concurrent network programming and performance analysis of complex distributed systems.
+In this assignment, the student are given the task of implementing a simple client that pulls data (pixel blocks) for a streaming video application, and (from the client's point of view) analyze the performance of the system. The video data is provided by a distributed video application consisting of a set of streaming services with interfaces for accessing video data in pixel blocks. To facilitate analysis of the system, a strictly hierarchical format for the video data is used.
 
-## Getting Started
+* a (video) stream consists of a set of temporally ordered (video) frames,
+* a frame consists of a set of spatially ordered (pixel) blocks, and
+* a block consists of a set of spatially ordered (16x16) pixels
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## Subject
 
-### Prerequisites
+Below you will find the Assignment web page subject :
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
-
-### Installing
-
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+[Subject](http://www8.cs.umu.se/kurser/5DV186/HT17/assignments/1/) - The subject
