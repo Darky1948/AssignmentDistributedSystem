@@ -89,14 +89,6 @@ This API is implemented in communication stubs in a provided UDP-based communica
 As noted in the interface, students are to provide their CS username as a parameter when instantiating and using the provided communication stubs. This is required as the provided application services contain individually configurable network quality rate limitations for link latencies and packet drop rates that are used to simulate variations in network link qualities.
 The task of the student is to (using the provided communication stubs) implement video service clients and experimentally estimate the following performance metrics:
 
-
-
-**Metric**										**Level**			**Unit**
-(UDP) packet drop rate (per service)			transport		percentage (%)
-(average) packet latency (per service)			transport		milliseconds (ms)
-(average) frame throughput						application		frames per second (fps)
-bandwidth utilization (total network footprint)	application		bits per second (bps)
-
 **Metric** | **Level** | **Unit**
 ------------ | ------------- | -------------
 (UDP) packet drop rate (per service) | transport | percentage (%)
