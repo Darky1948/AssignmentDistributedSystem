@@ -67,7 +67,7 @@ StreamServiceClient client = DefaultStreamServiceClient.bind(host,timeout,userna
 ```
 
 
-Use of the interfaces is demonstrated in an example Java client. The example can be run with a shell command similar to this
+Use of the interfaces is demonstrated in an [example Java client](http://www8.cs.umu.se/kurser/5DV186/HT17/assignments/1/ExampleClient.java)The example can be run with a shell command similar to this
 ```
 java -cp "5dv186a1.jar" se.umu.cs._5dv186.a1.client.ExampleClient harry.cs.umu.se 1000 test
 ```
