@@ -91,7 +91,7 @@ The task of the student is to (using the provided communication stubs) implement
 
 
 
-Metric											 Level				Unit
+**Metric**										**Level**			**Unit**
 (UDP) packet drop rate (per service)			transport		percentage (%)
 (average) packet latency (per service)			transport		milliseconds (ms)
 (average) frame throughput						application		frames per second (fps)
@@ -106,7 +106,7 @@ Students are to implement two types of service clients: sequential and parallel;
 ## Build Environment 
 Students shall provide an automated build script called build.sh (that could, e.g., be based on ant build files). Upon invocation, the build script shall produce a single JAR file named 5dv186a1_username.jar (where username is to be replaced with the student's username) containing all code needed to run the student's solution. 
 
-NOTE: your code must be compilable using Java 1.8.
+**NOTE:** your code must be compilable using Java 1.8.
 
 In addition to these files, the student shall also provide a text file named fqns.txt that specifies the fully qualified class names (class names including full package names, e.g., se.umu.cs._5dv186.a1.username.MyFrameAccessorFactory) of your FrameAccessor.Factory implementation class(es). For solutions with more than one factory class, specify one fully qualified class name per line in the file.
 
