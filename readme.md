@@ -97,6 +97,13 @@ The task of the student is to (using the provided communication stubs) implement
 (average) frame throughput						application		frames per second (fps)
 bandwidth utilization (total network footprint)	application		bits per second (bps)
 
+**Metric** | **Level** | **Unit**
+------------ | ------------- | -------------
+(UDP) packet drop rate (per service) | transport | percentage (%)
+(average) packet latency (per service) | transport | milliseconds (ms)
+(average) frame throughput | application | frames per second (fps)
+bandwidth utilization (total network footprint) | application | bits per second (bps)
+
 Student solutions shall implement a provided FrameAccessor interface (all referenced interfaces in the file), as well as construct a factory class that can be used to instantiate the interface (hint: one factory class per FrameAccessor implementation makes life easier). The factory classes shall implement the FrameAccessor.Factory interface and need to have a publicly accessible default constructor (a public constructor with no parameters).
 
 A note on exceptions: The FrameAccessor interface is designed to support multiple different implementation patterns, and due to this, all potentially data-fetching methods list exceptions in the interface. However, this does not mean that a particular FrameAccessor implementation is expected to use data fetching methods (i.e. the underlying StreamSocketClient.getBlock()) in each of these methods - in fact, most FrameAccessor implementations will not.
