@@ -72,14 +72,29 @@ public class Main {
 			FrameAccessorFactoryImpl frameAccessorFactoryImpl = new FrameAccessorFactoryImpl();
 			FrameAccessorImpl frameAccessorImpl = (FrameAccessorImpl) frameAccessorFactoryImpl
 					.getFrameAccessor(listStreamServiceClientToArray(clients), "stream10");
-
+			
+			// Data for metrics
+			double packetdroprate = 0d;
+			double packetlatency = 0d;
+			double totalTime = 0d;
+			
 			// Fetching the StreamInfo
 			StreamInfo streamInfo = frameAccessorImpl.getStreamInfo();
 
 			// Fecthing the frame
+			long t1 = System.currentTimeMillis();
 			for (int i = 0; i < streamInfo.getLengthInFrames(); i++) {
 				frameAccessorImpl.getFrame(i);
 			}
+			long t2 = System.currentTimeMillis();
+			
+			totalTime = (t2 - t1) * 1.00 / 1000;
+			
+			System.out.println("(UDP) packet drop rate (per service) : " + packetdroprate);
+            System.out.println("(average) packet latency (per service) : " + packetlatency);
+            System.out.println("(average) frame throughput : " + frameAccessorImpl.getPerformanceStatistics().getFrameThroughput());
+			System.out.println("Total amount of time : " +  totalTime + " s");
+			System.out.println("---------------------------------------------------------------");
 
 		} catch (SocketTimeoutException e) {
 			e.printStackTrace();
