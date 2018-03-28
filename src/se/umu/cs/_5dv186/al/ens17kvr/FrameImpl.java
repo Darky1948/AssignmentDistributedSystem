@@ -25,11 +25,11 @@ public class FrameImpl implements Frame {
 	 */
 	public FrameImpl(int x, int y) {
 		blocks = new ArrayList<>();
-
+		
 		for (int i = 0; i < y; i++) {
 			List<Block> temp = new ArrayList<>();
 			for (int j = 0; j < x; j++) {
-				temp.add(new Block(null));
+				temp.add(null);
 			}
 			blocks.add(temp);
 		}

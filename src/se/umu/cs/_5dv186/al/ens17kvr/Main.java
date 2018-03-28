@@ -40,52 +40,64 @@ public class Main {
 		Integer[] threadsNumber = { 1, 2, 4, 8, 16, 32, 64, 128, 256 };
 
 		for (Integer tn : threadsNumber) {
-			
+
 			List<StreamServiceClient> clients = new ArrayList<>();
-			
+
 			try {
-				
+
 				for (int i = 0; i < tn; i++) {
 					StreamServiceClient client = DefaultStreamServiceClient.bind(host, timeout, username);
 					clients.add(client);
 				}
-				
+
 				callHost(clients, timeout);
-				
+
 			} catch (SocketException | UnknownHostException e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 
 	}
 
 	/**
 	 * In this function we are going to fetches stream.
+	 * 
 	 * @param clients
 	 * @param timeout
 	 */
 	private static void callHost(List<StreamServiceClient> clients, int timeout) {
-		
+
 		try {
 			FrameAccessorFactoryImpl frameAccessorFactoryImpl = new FrameAccessorFactoryImpl();
-			FrameAccessorImpl frameAccessorImpl = (FrameAccessorImpl) frameAccessorFactoryImpl.getFrameAccessor((StreamServiceClient[]) clients.toArray(), "stream10");
-			
+			FrameAccessorImpl frameAccessorImpl = (FrameAccessorImpl) frameAccessorFactoryImpl
+					.getFrameAccessor(listStreamServiceClientToArray(clients), "stream10");
+
 			// Fetching the StreamInfo
 			StreamInfo streamInfo = frameAccessorImpl.getStreamInfo();
-			
+
 			// Fecthing the frame
 			for (int i = 0; i < streamInfo.getLengthInFrames(); i++) {
 				frameAccessorImpl.getFrame(i);
 			}
-			
+
 		} catch (SocketTimeoutException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
-
+	
+	/**
+	 * list.toArray don't work so need to do that.
+	 */
+	private static StreamServiceClient[] listStreamServiceClientToArray(List<StreamServiceClient> clients) {
+		StreamServiceClient[] serviceClients = new StreamServiceClient[clients.size()];
+		
+		for (int i = 0; i < serviceClients.length; i++) {
+			serviceClients[i]= clients.get(i);
+		}
+		return serviceClients;
+	}
+	
 }
