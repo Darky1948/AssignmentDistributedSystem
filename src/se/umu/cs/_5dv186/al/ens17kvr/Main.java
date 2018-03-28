@@ -50,7 +50,7 @@ public class Main {
 					clients.add(client);
 				}
 				
-				callHost(clients, timeout, tn);
+				callHost(clients, timeout);
 				
 			} catch (SocketException | UnknownHostException e) {
 				e.printStackTrace();
@@ -64,13 +64,12 @@ public class Main {
 	 * In this function we are going to fetches stream.
 	 * @param clients
 	 * @param timeout
-	 * @param tn
 	 */
-	private static void callHost(List<StreamServiceClient> clients, int timeout, Integer tn) {
+	private static void callHost(List<StreamServiceClient> clients, int timeout) {
 		
 		try {
 			FrameAccessorFactoryImpl frameAccessorFactoryImpl = new FrameAccessorFactoryImpl();
-			FrameAccessorImpl frameAccessorImpl = (FrameAccessorImpl) frameAccessorFactoryImpl.getFrameAccessor(getStreamServiveClient(clients, tn), "stream10");
+			FrameAccessorImpl frameAccessorImpl = (FrameAccessorImpl) frameAccessorFactoryImpl.getFrameAccessor((StreamServiceClient[]) clients.toArray(), "stream10");
 			
 			// Fetching the StreamInfo
 			StreamInfo streamInfo = frameAccessorImpl.getStreamInfo();
@@ -87,21 +86,6 @@ public class Main {
 		}
 		
 		
-	}
-	
-	/**
-	 * Convert the list into array of StreamServiceClient.
-	 * @param clients
-	 * @param tn
-	 * @return StreamServiceClient[]
-	 */
-	private static StreamServiceClient[] getStreamServiveClient(List<StreamServiceClient> clients, Integer tn) {
-		StreamServiceClient[] streamServiceClients = new StreamServiceClient[clients.size()];
-		
-		for (int i = 0; i < clients.size(); i++) {
-			streamServiceClients[i] = clients.get(i);
-		}
-		return streamServiceClients;
 	}
 
 }

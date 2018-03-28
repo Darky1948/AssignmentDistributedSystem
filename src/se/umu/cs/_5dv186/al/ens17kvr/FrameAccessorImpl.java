@@ -3,7 +3,9 @@ package se.umu.cs._5dv186.al.ens17kvr;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.List;
 
+import ki.types.ds.Block;
 import ki.types.ds.StreamInfo;
 import se.umu.cs._5dv186.a1.client.FrameAccessor;
 import se.umu.cs._5dv186.a1.client.StreamServiceClient;
@@ -27,8 +29,8 @@ public class FrameAccessorImpl implements FrameAccessor {
 	/**
 	 * Our performance statistic object.
 	 */
-	private PerformanceStatisticImpl performanceStatisticImpl;
-
+	private PerformanceStatisticImpl performanceStatisticImpl = new PerformanceStatisticImpl();
+	
 	/**
 	 * Constructor for one host.
 	 * 
@@ -40,7 +42,6 @@ public class FrameAccessorImpl implements FrameAccessor {
 
 		this.clients.add(client);
 		this.stream = stream;
-		this.performanceStatisticImpl = new PerformanceStatisticImpl();
 	}
 
 	/**
@@ -56,7 +57,6 @@ public class FrameAccessorImpl implements FrameAccessor {
 			this.clients.add(streamServiceClient);
 		}
 		this.stream = stream;
-		this.performanceStatisticImpl = new PerformanceStatisticImpl();
 	}
 
 	@Override
@@ -64,10 +64,19 @@ public class FrameAccessorImpl implements FrameAccessor {
 		
 		// Fetch again the streamInfo
 		StreamInfo streamInfo = getStreamInfo();
+		List<Block> fetchedBlock = new ArrayList<>();
+	
+		Frame frame = new FrameImpl(streamInfo.getWidthInBlocks(), streamInfo.getHeightInBlocks());
 		
-		FrameImpl frameImpl = new FrameImpl();
+		for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
+			for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
+				fetchedBlock.add(frame.getBlock(x, y));
+			}
+		}
+			
 		
-		return null;
+		
+		return frame;
 	}
 
 	@Override
