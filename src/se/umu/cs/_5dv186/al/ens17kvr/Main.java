@@ -85,8 +85,8 @@ public class Main {
 			
 			double totalTime = (t2 - t1) * 1.00 / 1000;
 			
-			System.out.println("(UDP) packet drop rate (per service) : " );
-            System.out.println("(average) packet latency (per service) : " );
+			System.out.println("(UDP) packet drop rate (per service) : " + frameAccessorImpl.getPerformanceStatisticImpl().getPacketDropRate(""));
+            System.out.println("(average) packet latency (per service) : " + frameAccessorImpl.getPerformanceStatisticImpl().getPacketLatency(""));
             System.out.println("(average) frame throughput : " + frameAccessorImpl.getPerformanceStatistics().getFrameThroughput());
 			System.out.println("Total amount of time : " +  totalTime + " s");
 			System.out.println("---------------------------------------------------------------");
