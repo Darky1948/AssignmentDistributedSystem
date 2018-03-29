@@ -39,7 +39,6 @@ public class FrameAccessorImpl implements FrameAccessor {
 	 */
 	public FrameAccessorImpl(StreamServiceClient client, String stream) {
 		this.clients = new ArrayList<>();
-
 		this.clients.add(client);
 		this.stream = stream;
 	}
@@ -60,25 +59,46 @@ public class FrameAccessorImpl implements FrameAccessor {
 	}
 
 	@Override
-	public Frame getFrame(int i) throws IOException, SocketTimeoutException {
+	public Frame getFrame(int i) {
 		
 		// Fetch again the streamInfo
-		StreamInfo streamInfo = getStreamInfo();
-		List<Block> fetchedBlock = new ArrayList<>();
-	
-		Frame frame = new FrameImpl(streamInfo.getWidthInBlocks(), streamInfo.getHeightInBlocks());
+		List<Block> fetchedBlocks = new ArrayList<>();
 		
-		//for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
-		for (int x = 0; x < 10; x++) {
-//			for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
-			for (int y = 0; y < 10; y++) {
-				fetchedBlock.add(frame.getBlock(x, y));
-			}
-		}
+		for (StreamServiceClient client : clients) {
 			
+			long t1 = System.currentTimeMillis();
+			Frame frame = new FrameImpl(client, stream, i);
+			
+			//for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
+			for (int x = 0; x < 1; x++) {
+				//for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
+				for (int y = 0; y < 10; y++) {
+					long latency1 = System.currentTimeMillis();
+					try {
+						fetchedBlocks.add(frame.getBlock(x, y));
+						performanceStatisticImpl.incrementPackageReceived();
+						System.out.println("The block was received successfully !");
+					}catch (IOException e) {
+						// Here it means we have a dropped packet
+						System.out.println("A drop packed happened !");
+						performanceStatisticImpl.incrementPackageDropped();
+						// TODO how to retrieved the lost pack?
+					}
+					long latency2 = System.currentTimeMillis();
+					
+					performanceStatisticImpl.computeTotalLatency(latency2 - latency1);
+					
+					System.out.println("block : " + x + " " + y);
+				}
+			}
+			
+			long t2 = System.currentTimeMillis();
+			
+			performanceStatisticImpl.computeTotalTime(t2 - t1);
+			performanceStatisticImpl.incrementFrameNb();
+		}
 		
-		
-		return frame;
+		return null;
 	}
 
 	@Override

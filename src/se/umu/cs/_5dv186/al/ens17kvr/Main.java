@@ -73,11 +73,6 @@ public class Main {
 			FrameAccessorImpl frameAccessorImpl = (FrameAccessorImpl) frameAccessorFactoryImpl
 					.getFrameAccessor(listStreamServiceClientToArray(clients), "stream10");
 			
-			// Data for metrics
-			double packetdroprate = 0d;
-			double packetlatency = 0d;
-			double totalTime = 0d;
-			
 			// Fetching the StreamInfo
 			StreamInfo streamInfo = frameAccessorImpl.getStreamInfo();
 
@@ -88,10 +83,10 @@ public class Main {
 			}
 			long t2 = System.currentTimeMillis();
 			
-			totalTime = (t2 - t1) * 1.00 / 1000;
+			double totalTime = (t2 - t1) * 1.00 / 1000;
 			
-			System.out.println("(UDP) packet drop rate (per service) : " + packetdroprate);
-            System.out.println("(average) packet latency (per service) : " + packetlatency);
+			System.out.println("(UDP) packet drop rate (per service) : " );
+            System.out.println("(average) packet latency (per service) : " );
             System.out.println("(average) frame throughput : " + frameAccessorImpl.getPerformanceStatistics().getFrameThroughput());
 			System.out.println("Total amount of time : " +  totalTime + " s");
 			System.out.println("---------------------------------------------------------------");

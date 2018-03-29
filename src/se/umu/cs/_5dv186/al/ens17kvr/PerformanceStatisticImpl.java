@@ -15,7 +15,13 @@ public class PerformanceStatisticImpl implements PerformanceStatistics {
 	 * 
 	 * Bandwidth utilization : is the total amount of link bandwidth
 	 */
-
+	
+	private double totalTime = 0d;
+	private double packageReceived = 0d;
+	private double packageDropped = 0d;
+	private double nbFrame = 0d;
+	private double totalLatency = 0d;
+	
 	@Override
 	public double getBandwidthUtilization() {
 		double additionLinkBdw = 0;
@@ -29,32 +35,61 @@ public class PerformanceStatisticImpl implements PerformanceStatistics {
 
 	@Override
 	public double getFrameThroughput() {
-		/*
-		 * Frame par second
-		 */
-		int numberOfFrame = 0;
-		int totalTime = 0;
-		return numberOfFrame / (totalTime / 1000);
+		return nbFrame / (totalTime / 1000);
 	}
 
 	@Override
 	public double getLinkBandwidth(String arg0) {
-		// TODO
-		double packagesReceived = 0d;
-		double totalTime = 0d;
-		return (3 * 8) * (16 * 16) * (packagesReceived / (totalTime / 1000));
+		return (3 * 8) * (16 * 16) * (packageReceived / (totalTime / 1000));
 	}
 
 	@Override
 	public double getPacketDropRate(String arg0) {
 		// Packet Drop Rate : amountOfDroppedPacket / TotalAmountOfPackets
-		return 0;
+		return packageDropped / (packageReceived + packageDropped);
 	}
 
 	@Override
 	public double getPacketLatency(String arg0) {
 		// Packet Latency : total time / packet received
-		return 0;
+		return totalLatency  / packageReceived;
+	}
+	
+	/**
+	 * This function compute the total amount of time.
+	 * @param time
+	 */
+	public void computeTotalTime(double time) {
+		totalTime += time;
+	}
+	
+	/**
+	 * This function compute the total amount of Latency.
+	 * @param time
+	 */
+	public void computeTotalLatency(double time) {
+		totalLatency += time;
+	}
+	
+	/**
+	 * Increment the number of frame rendered.
+	 */
+	public void incrementFrameNb() {
+		this.nbFrame++;
+	}
+	
+	/**
+	 * Increment the number of package received.
+	 */
+	public void incrementPackageReceived() {
+		this.packageReceived++;
+	}
+	
+	/**
+	 * Increment the number of package dropped.
+	 */
+	public void incrementPackageDropped() {
+		this.packageDropped++;
 	}
 
 }

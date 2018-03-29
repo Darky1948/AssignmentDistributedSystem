@@ -2,10 +2,11 @@ package se.umu.cs._5dv186.al.ens17kvr;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
 
 import ki.types.ds.Block;
+import ki.types.ds.StreamInfo;
+import se.umu.cs._5dv186.a1.client.StreamServiceClient;
 import se.umu.cs._5dv186.a1.client.FrameAccessor.Frame;
 
 /**
@@ -15,29 +16,51 @@ import se.umu.cs._5dv186.a1.client.FrameAccessor.Frame;
  *
  */
 public class FrameImpl implements Frame {
-	
-	List<List<Block>> blocks;
-	
+
 	/**
-	 * Constructor {@link FrameImpl}.
-	 * @param x
-	 * @param y
+	 * A frame is a set of ordered set of blocks.
 	 */
-	public FrameImpl(int x, int y) {
-		blocks = new ArrayList<>();
-		
-		for (int i = 0; i < y; i++) {
-			List<Block> temp = new ArrayList<>();
-			for (int j = 0; j < x; j++) {
-				temp.add(null);
-			}
-			blocks.add(temp);
-		}
+	List<List<Block>> blocks;
+
+	/**
+	 * The service client.
+	 */
+	StreamServiceClient serviceClient;
+
+	/**
+	 * The stream name.
+	 */
+	String streamName;
+
+	/**
+	 * The frame position.
+	 */
+	int frame;
+
+	public FrameImpl(StreamServiceClient serviceClient, String streamName, int frame) {
+		this.serviceClient = serviceClient;
+		this.streamName = streamName;
+		this.frame = frame;
 	}
 
 	@Override
-	public Block getBlock(int x, int y) throws IOException, SocketTimeoutException {
-		return blocks.get(x).get(y);
+	public Block getBlock(int x, int y) throws IOException {
+		// TODO comment gérer le socketTimeoutException
+		/*
+		 * java.net.SocketTimeoutException: Receive timed out at
+		 * java.net.DualStackPlainDatagramSocketImpl.socketReceiveOrPeekData(Native
+		 * Method) at java.net.DualStackPlainDatagramSocketImpl.receive0(Unknown Source)
+		 * at java.net.AbstractPlainDatagramSocketImpl.receive(Unknown Source) at
+		 * java.net.DatagramSocket.receive(Unknown Source) at
+		 * se.umu.cs._5dv186.a1.Transceiver.receive(Transceiver.java:62) at
+		 * se.umu.cs._5dv186.a1.client.DefaultStreamServiceClient.getBlock(
+		 * DefaultStreamServiceClient.java:78) at
+		 * se.umu.cs._5dv186.al.ens17kvr.FrameImpl.getBlock(FrameImpl.java:49) at
+		 * se.umu.cs._5dv186.al.ens17kvr.FrameAccessorImpl.getFrame(FrameAccessorImpl.
+		 * java:76) at se.umu.cs._5dv186.al.ens17kvr.Main.callHost(Main.java:87) at
+		 * se.umu.cs._5dv186.al.ens17kvr.Main.main(Main.java:53)
+		 */
+		return this.serviceClient.getBlock(streamName, frame, x, y);
 	}
 
 }
