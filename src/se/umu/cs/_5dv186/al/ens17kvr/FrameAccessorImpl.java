@@ -3,7 +3,10 @@ package se.umu.cs._5dv186.al.ens17kvr;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import ki.types.ds.Block;
 import ki.types.ds.StreamInfo;
@@ -61,9 +64,6 @@ public class FrameAccessorImpl implements FrameAccessor {
 	@Override
 	public Frame getFrame(int i) {
 		
-		// Fetch again the streamInfo
-		List<Block> fetchedBlocks = new ArrayList<>();
-		
 		for (StreamServiceClient client : clients) {
 			
 			long t1 = System.currentTimeMillis();
@@ -73,20 +73,9 @@ public class FrameAccessorImpl implements FrameAccessor {
 			for (int x = 0; x < 1; x++) {
 				//for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
 				for (int y = 0; y < 10; y++) {
-					long latency1 = System.currentTimeMillis();
-					try {
-						fetchedBlocks.add(frame.getBlock(x, y));
-						performanceStatisticImpl.incrementPackageReceived();
-						System.out.println("The block was received successfully !");
-					}catch (IOException e) {
-						// Here it means we have a dropped packet
-						System.out.println("A drop packed happened !");
-						performanceStatisticImpl.incrementPackageDropped();
-						// TODO how to retrieved the lost pack?
-					}
-					long latency2 = System.currentTimeMillis();
-					
-					performanceStatisticImpl.computeTotalLatency(latency2 - latency1);
+					// TODO problème comment gérer les thread pour des x et y données ? paralléliser le fetch des blocks 
+					Thread blockxy = new BlockThread(frame, performanceStatisticImpl, client);
+					blockxy.run();
 					
 					System.out.println("block : " + x + " " + y);
 				}
