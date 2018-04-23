@@ -43,7 +43,6 @@ public class FrameImpl implements Frame {
 
 	@Override
 	public Block getBlock(int x, int y) throws IOException {
-		// TODO comment gérer le socketTimeoutException
 		return this.serviceClient.getBlock(streamName, frame, x, y);
 	}
 

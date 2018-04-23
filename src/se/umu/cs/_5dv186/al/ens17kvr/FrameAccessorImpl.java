@@ -3,12 +3,7 @@ package se.umu.cs._5dv186.al.ens17kvr;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-import ki.types.ds.Block;
 import ki.types.ds.StreamInfo;
 import se.umu.cs._5dv186.a1.client.FrameAccessor;
 import se.umu.cs._5dv186.a1.client.StreamServiceClient;
@@ -74,7 +69,8 @@ public class FrameAccessorImpl implements FrameAccessor {
 				//for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
 				for (int y = 0; y < 10; y++) {
 					// TODO problème comment gérer les thread pour des x et y données ? paralléliser le fetch des blocks 
-					Thread blockxy = new BlockThread(frame, performanceStatisticImpl, client);
+					BlockXY block = new BlockXY(x, y);
+					Thread blockxy = new BlockThread(frame, performanceStatisticImpl, client, block);
 					blockxy.run();
 					
 					System.out.println("block : " + x + " " + y);

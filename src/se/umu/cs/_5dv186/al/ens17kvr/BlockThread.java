@@ -36,7 +36,12 @@ public class BlockThread extends Thread {
 	/**
 	 * Will store the dropped blocks
 	 */
-	Queue<Block> droppedBlocks = new ConcurrentLinkedQueue<Block>();
+	Queue<BlockXY> droppedBlocks = new ConcurrentLinkedQueue<BlockXY>();
+
+	/**
+	 * To know which block we want to fecth.
+	 */
+	private BlockXY blockXY;
 	
 	
 	/**
@@ -44,11 +49,13 @@ public class BlockThread extends Thread {
 	 * @param frame
 	 * @param client
 	 * @param performanceStatisticImpl
+	 * @param block 
 	 */
-	public BlockThread(Frame frame, PerformanceStatisticImpl performanceStatisticImpl, StreamServiceClient client) {
+	public BlockThread(Frame frame, PerformanceStatisticImpl performanceStatisticImpl, StreamServiceClient client, BlockXY blockXY) {
 		this.frame = frame;
 		this.performanceStatisticImpl = performanceStatisticImpl;
 		this.client = client;
+		this.blockXY = blockXY;
 	}
 
 	/* (non-Javadoc)
@@ -56,43 +63,45 @@ public class BlockThread extends Thread {
 	 */
 	public void run() {
 		long latency1 = System.currentTimeMillis();
-		fetchBlock(0, 0);
+		fetchBlock(blockXY);
 		long latency2 = System.currentTimeMillis();
 		
 		performanceStatisticImpl.computeTotalLatency(latency2 - latency1);
 		
-		
-		// Handle the dropped packet
-		// TODO add time safety to avoid infinte loops
-		Block dropped = null;
-		
+		BlockXY dropped = null;
+
 		while((dropped = droppedBlocks.poll()) != null) {
+			
 			latency1 = System.currentTimeMillis();
-			fetchBlock(0, 0);
+			fetchBlock(blockXY);
 			latency2 = System.currentTimeMillis();
 			
 			performanceStatisticImpl.computeTotalLatency(latency2 - latency1);
 		}
-		
 		
 	}
 	
 	
 	/**
 	 * Function fetch all the needed blocks according the parameters.
-	 * @param x
-	 * @param y
+	 * @param blockXY
 	 */
-	private void fetchBlock(int x, int y) {
+	private void fetchBlock(BlockXY blockXY) {
 		try {
-			fetchedBlocks.add(frame.getBlock(x, y));
+			fetchedBlocks.add(frame.getBlock(blockXY.getX(), blockXY.getY()));
 			performanceStatisticImpl.incrementPackageReceived();
 			System.out.println("The block was received successfully !");
 		}catch (IOException e) {
 			// Here it means we have a dropped packet
 			System.out.println("A drop packed happened !");
 			performanceStatisticImpl.incrementPackageDropped();
-			droppedBlocks.add(e) // TODO bloqué :/
+			blockXY.incrementCounterTries();
+			if(blockXY.getCounterTries() < BlockXY.NUMBER_OF_TRIES) {
+				droppedBlocks.add(blockXY);
+			} else {
+				// Handling infinity loop for packets that drop every time
+				System.err.println("The block : " + blockXY.getX() + "-" + blockXY.getY() + " can't be reached.");
+			}
 		}
 	}
 
@@ -123,6 +132,19 @@ public class BlockThread extends Thread {
 	public void setClient(StreamServiceClient client) {
 		this.client = client;
 	}
-	
+
+	/**
+	 * @return the blockXY
+	 */
+	public BlockXY getBlockXY() {
+		return blockXY;
+	}
+
+	/**
+	 * @param blockXY the blockXY to set
+	 */
+	public void setBlockXY(BlockXY blockXY) {
+		this.blockXY = blockXY;
+	}
 	
 }
