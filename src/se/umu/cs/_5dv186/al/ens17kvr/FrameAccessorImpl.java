@@ -3,6 +3,10 @@ package se.umu.cs._5dv186.al.ens17kvr;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import ki.types.ds.StreamInfo;
 import se.umu.cs._5dv186.a1.client.FrameAccessor;
@@ -59,23 +63,39 @@ public class FrameAccessorImpl implements FrameAccessor {
 	@Override
 	public Frame getFrame(int i) {
 		
+		// TODO initialiser liste de block pour travailler avec.
+		Queue<BlockXY> blockXYs = new ConcurrentLinkedQueue<BlockXY>();
+		
+		//for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
+		for (int x = 0; x < 50; x++) {
+			//for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
+			for (int y = 0; y < 50; y++) {
+				blockXYs.add(new BlockXY(x, y));
+			}
+		}
+		
 		for (StreamServiceClient client : clients) {
 			
 			long t1 = System.currentTimeMillis();
 			Frame frame = new FrameImpl(client, stream, i);
 			
-			//for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
-			for (int x = 0; x < 1; x++) {
-				//for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
-				for (int y = 0; y < 10; y++) {
-					// TODO problème comment gérer les thread pour des x et y données ? paralléliser le fetch des blocks 
-					BlockXY block = new BlockXY(x, y);
-					Thread blockxy = new BlockThread(frame, performanceStatisticImpl, client, block);
-					blockxy.run();
-					
-					System.out.println("block : " + x + " " + y);
-				}
-			}
+			
+			
+			Thread blockxyRetrievement = new BlockThread(frame, performanceStatisticImpl, client, blockXYs);
+			blockxyRetrievement.start();
+			
+//			for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
+//			for (int x = 0; x < 1; x++) {
+//				for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
+//				for (int y = 0; y < 10; y++) {
+//					// TODO problème comment gérer les thread pour des x et y données ? paralléliser le fetch des blocks 
+//					BlockXY block = new BlockXY(x, y);
+//					Thread blockxy = new BlockThread(frame, performanceStatisticImpl, client, block);
+//					blockxy.run();
+//					
+//					System.out.println("block : " + x + " " + y);
+//				}
+//			}
 			
 			long t2 = System.currentTimeMillis();
 			

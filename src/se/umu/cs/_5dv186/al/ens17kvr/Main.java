@@ -37,7 +37,7 @@ public class Main {
 
 		// We define the number of Threads that we are going to use. 1 is for sequential
 		// high is for parallel.
-		Integer[] threadsNumber = { 1, 2, 4, 8, 16, 32, 64, 128, 256 };
+		Integer[] threadsNumber = { 4, 8, 16, 32, 64, 128, 256 };
 
 		for (Integer tn : threadsNumber) {
 
@@ -79,6 +79,7 @@ public class Main {
 			// Fecthing the frame
 			long t1 = System.currentTimeMillis();
 			for (int i = 0; i < streamInfo.getLengthInFrames(); i++) {
+				System.out.println("Frame :" + (i + 1) + "/" + streamInfo.getLengthInFrames());
 				frameAccessorImpl.getFrame(i);
 			}
 			long t2 = System.currentTimeMillis();
