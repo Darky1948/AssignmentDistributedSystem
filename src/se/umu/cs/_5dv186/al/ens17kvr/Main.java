@@ -10,15 +10,21 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ki.types.ds.StreamInfo;
 import se.umu.cs._5dv186.a1.client.DefaultStreamServiceClient;
 import se.umu.cs._5dv186.a1.client.StreamServiceClient;
+import sun.rmi.runtime.Log;
 
 /**
  * @author Kristen Viguier ens17kvr
  */
 public class Main {
-
+	
+	/** Handle stack output */
+    private static final Logger LOG = Logger.getLogger(Main.class);
+    
 	public static final int DEFAULT_TIMEOUT = 1000;
 
 	/**
@@ -33,11 +39,11 @@ public class Main {
 		final String username = (args.length > 2) ? args[2] : "test";
 
 		// Only one host to tests
-		System.out.println("Test on the host " + host + " with " + timeout + " timeout for the user " + username);
-
+		LOG.trace("Test on the host " + host + " with " + timeout + " timeout for the user " + username);
+		
 		// We define the number of Threads that we are going to use. 1 is for sequential
 		// high is for parallel.
-		Integer[] threadsNumber = { 1 };
+		Integer[] threadsNumber = { 1, 2, 4, }; //8, 16, 32, 64, 128, 256 };
 
 		for (Integer tn : threadsNumber) {
 
@@ -79,18 +85,18 @@ public class Main {
 			// Fecthing the frame
 			long t1 = System.currentTimeMillis();
 			for (int i = 0; i < streamInfo.getLengthInFrames(); i++) {
-				System.out.println("Frame :" + (i + 1) + "/" + streamInfo.getLengthInFrames());
+				LOG.trace("Frame :" + (i + 1) + "/" + streamInfo.getLengthInFrames());
 				frameAccessorImpl.getFrame(i);
 			}
 			long t2 = System.currentTimeMillis();
 			
 			double totalTime = (t2 - t1) * 1.00 / 1000;
 			
-			System.out.println("(UDP) packet drop rate (per service) : " + frameAccessorImpl.getPerformanceStatisticImpl().getPacketDropRate(""));
-            System.out.println("(average) packet latency (per service) : " + frameAccessorImpl.getPerformanceStatisticImpl().getPacketLatency(""));
-            System.out.println("(average) frame throughput : " + frameAccessorImpl.getPerformanceStatistics().getFrameThroughput());
-			System.out.println("Total amount of time : " +  totalTime + " s");
-			System.out.println("---------------------------------------------------------------");
+			LOG.info("(UDP) packet drop rate (per service) : " + frameAccessorImpl.getPerformanceStatisticImpl().getPacketDropRate(""));
+            LOG.info("(average) packet latency (per service) : " + frameAccessorImpl.getPerformanceStatisticImpl().getPacketLatency(""));
+            LOG.info("(average) frame throughput : " + frameAccessorImpl.getPerformanceStatistics().getFrameThroughput());
+			LOG.info("Total amount of time : " +  totalTime + " s");
+			LOG.info("---------------------------------------------------------------");
 
 		} catch (SocketTimeoutException e) {
 			e.printStackTrace();

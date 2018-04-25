@@ -99,6 +99,8 @@ public class FrameAccessorImpl implements FrameAccessor {
 		performanceStatisticImpl.computeTotalTime(t2 - t1);
 		performanceStatisticImpl.incrementFrameNb();
 		
+		// TODO faire un nouveau perf statistic pour chacun des threads
+		
 		return null;
 	}
 
