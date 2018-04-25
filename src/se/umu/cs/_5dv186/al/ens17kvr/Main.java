@@ -37,7 +37,7 @@ public class Main {
 
 		// We define the number of Threads that we are going to use. 1 is for sequential
 		// high is for parallel.
-		Integer[] threadsNumber = { 4, 8, 16, 32, 64, 128, 256 };
+		Integer[] threadsNumber = { 1 };
 
 		for (Integer tn : threadsNumber) {
 

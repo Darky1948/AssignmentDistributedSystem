@@ -59,7 +59,7 @@ public class PerformanceStatisticImpl implements PerformanceStatistics {
 	 * This function compute the total amount of time.
 	 * @param time
 	 */
-	public void computeTotalTime(double time) {
+	public synchronized void computeTotalTime(double time) {
 		totalTime += time;
 	}
 	
@@ -67,28 +67,28 @@ public class PerformanceStatisticImpl implements PerformanceStatistics {
 	 * This function compute the total amount of Latency.
 	 * @param time
 	 */
-	public void computeTotalLatency(double time) {
+	public synchronized void computeTotalLatency(double time) {
 		totalLatency += time;
 	}
 	
 	/**
 	 * Increment the number of frame rendered.
 	 */
-	public void incrementFrameNb() {
+	public synchronized void incrementFrameNb() {
 		this.nbFrame++;
 	}
 	
 	/**
 	 * Increment the number of package received.
 	 */
-	public void incrementPackageReceived() {
+	public synchronized void incrementPackageReceived() {
 		this.packageReceived++;
 	}
 	
 	/**
 	 * Increment the number of package dropped.
 	 */
-	public void incrementPackageDropped() {
+	public synchronized void incrementPackageDropped() {
 		this.packageDropped++;
 	}
 

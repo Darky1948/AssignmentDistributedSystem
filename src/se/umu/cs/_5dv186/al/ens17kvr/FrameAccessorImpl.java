@@ -3,9 +3,8 @@ package se.umu.cs._5dv186.al.ens17kvr;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Queue;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import ki.types.ds.StreamInfo;
@@ -63,45 +62,42 @@ public class FrameAccessorImpl implements FrameAccessor {
 	@Override
 	public Frame getFrame(int i) {
 		
-		// TODO initialiser liste de block pour travailler avec.
+		// Init the Queue to work with.
 		Queue<BlockXY> blockXYs = new ConcurrentLinkedQueue<BlockXY>();
 		
 		//for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
-		for (int x = 0; x < 50; x++) {
+		for (int x = 0; x < 5; x++) {
 			//for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
-			for (int y = 0; y < 50; y++) {
+			for (int y = 0; y < 10; y++) {
 				blockXYs.add(new BlockXY(x, y));
 			}
 		}
 		
+		List<Thread> threads = new ArrayList<>();
+		
+		// Compute the amount of time to fetch all blocks that made the frame at the ith index.
+		long t1 = System.currentTimeMillis();
+		
 		for (StreamServiceClient client : clients) {
-			
-			long t1 = System.currentTimeMillis();
 			Frame frame = new FrameImpl(client, stream, i);
-			
-			
 			
 			Thread blockxyRetrievement = new BlockThread(frame, performanceStatisticImpl, client, blockXYs);
 			blockxyRetrievement.start();
-			
-//			for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
-//			for (int x = 0; x < 1; x++) {
-//				for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
-//				for (int y = 0; y < 10; y++) {
-//					// TODO problème comment gérer les thread pour des x et y données ? paralléliser le fetch des blocks 
-//					BlockXY block = new BlockXY(x, y);
-//					Thread blockxy = new BlockThread(frame, performanceStatisticImpl, client, block);
-//					blockxy.run();
-//					
-//					System.out.println("block : " + x + " " + y);
-//				}
-//			}
-			
-			long t2 = System.currentTimeMillis();
-			
-			performanceStatisticImpl.computeTotalTime(t2 - t1);
-			performanceStatisticImpl.incrementFrameNb();
+			threads.add(blockxyRetrievement); // To know when thread has completed its task
 		}
+		
+		for(Thread thread : threads) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		long t2 = System.currentTimeMillis();
+		
+		performanceStatisticImpl.computeTotalTime(t2 - t1);
+		performanceStatisticImpl.incrementFrameNb();
 		
 		return null;
 	}

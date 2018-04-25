@@ -62,19 +62,18 @@ public class BlockThread extends Thread {
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
-		
+
 		while(blockXYs.poll() != null) {
+			// Compute the time to fetch one block
 			long latency1 = System.currentTimeMillis();
 			fetchBlock(blockXYs.poll());
 			long latency2 = System.currentTimeMillis();
 			performanceStatisticImpl.computeTotalLatency(latency2 - latency1);
 		}
 		
-		
-		BlockXY dropped = null;
-
-		while((dropped = droppedBlocks.poll()) != null) {
-			
+		// Try to fetch the dropped blocks.
+		while(droppedBlocks.poll() != null) {
+			// Compute the time to fetch one dropped block
 			long latency1 = System.currentTimeMillis();
 			fetchBlock(droppedBlocks.poll());
 			long latency2 = System.currentTimeMillis();
