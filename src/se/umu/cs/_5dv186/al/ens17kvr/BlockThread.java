@@ -7,12 +7,17 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.log4j.Logger;
+
 import ki.types.ds.Block;
 import se.umu.cs._5dv186.a1.client.FrameAccessor.Frame;
 import se.umu.cs._5dv186.a1.client.StreamServiceClient;
 
 public class BlockThread extends Thread {
 	
+	/** Handle stack output */
+    private static final Logger LOG = Logger.getLogger(BlockThread.class);
+    
 	/**
 	 * The current frame.
 	 */
@@ -92,11 +97,11 @@ public class BlockThread extends Thread {
 			if(blockXY != null) {
 				fetchedBlocks.add(frame.getBlock(blockXY.getX(), blockXY.getY()));
 				performanceStatisticImpl.incrementPackageReceived();
-				System.out.println("The block was received successfully ! (PID = " +  this.getId() + ")");
+				LOG.trace("The block was received successfully ! (PID = " +  this.getId() + ")");
 			}
 		}catch (IOException e) {
 			// Here it means we have a dropped packet
-			System.out.println("A drop packed happened !");
+			LOG.trace("A drop packed happened !");
 			
 			performanceStatisticImpl.incrementPackageDropped();
 			blockXY.incrementCounterTries();
@@ -105,7 +110,7 @@ public class BlockThread extends Thread {
 				droppedBlocks.add(blockXY);
 			} else {
 				// Handling infinity loop for packets that drop every time
-				System.err.println("The block : " + blockXY.getX() + "-" + blockXY.getY() + " can't be reached. (PID = " +  this.getId() + ")");
+				LOG.trace("The block : " + blockXY.getX() + "-" + blockXY.getY() + " can't be reached. (PID = " +  this.getId() + ")");
 			}
 		}
 	}

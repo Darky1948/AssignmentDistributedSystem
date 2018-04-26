@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import ki.types.ds.StreamInfo;
 import se.umu.cs._5dv186.a1.client.DefaultStreamServiceClient;
 import se.umu.cs._5dv186.a1.client.StreamServiceClient;
-import sun.rmi.runtime.Log;
+import se.umu.cs._5dv186.a1.client.StreamServiceDiscovery;
 
 /**
  * @author Kristen Viguier ens17kvr
@@ -34,34 +34,40 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		final String host = (args.length > 0) ? args[0] : "localhost";
+//		final String host = (args.length > 0) ? args[0] : "localhost";
 		final int timeout = (args.length > 1) ? Integer.parseInt(args[1]) : DEFAULT_TIMEOUT;
 		final String username = (args.length > 2) ? args[2] : "test";
 
-		// Only one host to tests
-		LOG.trace("Test on the host " + host + " with " + timeout + " timeout for the user " + username);
+		
 		
 		// We define the number of Threads that we are going to use. 1 is for sequential
 		// high is for parallel.
-		Integer[] threadsNumber = { 1, 2, 4, }; //8, 16, 32, 64, 128, 256 };
-
-		for (Integer tn : threadsNumber) {
-
-			List<StreamServiceClient> clients = new ArrayList<>();
-
-			try {
-
-				for (int i = 0; i < tn; i++) {
-					StreamServiceClient client = DefaultStreamServiceClient.bind(host, timeout, username);
-					clients.add(client);
+		Integer[] threadsNumber = {1, 2, 4, 6, 8, 16, 32, 64, 128, 256 };
+		
+		String[] hosts = StreamServiceDiscovery.SINGLETON.findHosts(); 
+		
+		for (String host : hosts) {
+			// Only one host to tests
+			LOG.info("Test on the host " + host + " with " + timeout + " timeout for the user " + username);
+		
+			for (Integer tn : threadsNumber) {
+				LOG.info("Number of threads use to fetch data : " + tn);
+				List<StreamServiceClient> clients = new ArrayList<>();
+	
+				try {
+	
+					for (int i = 0; i < tn; i++) {
+						StreamServiceClient client = DefaultStreamServiceClient.bind(host, timeout, username);
+						clients.add(client);
+					}
+	
+					callHost(clients, timeout);
+	
+				} catch (SocketException | UnknownHostException e) {
+					e.printStackTrace();
 				}
-
-				callHost(clients, timeout);
-
-			} catch (SocketException | UnknownHostException e) {
-				e.printStackTrace();
+	
 			}
-
 		}
 
 	}
@@ -95,8 +101,18 @@ public class Main {
 			LOG.info("(UDP) packet drop rate (per service) : " + frameAccessorImpl.getPerformanceStatisticImpl().getPacketDropRate(""));
             LOG.info("(average) packet latency (per service) : " + frameAccessorImpl.getPerformanceStatisticImpl().getPacketLatency(""));
             LOG.info("(average) frame throughput : " + frameAccessorImpl.getPerformanceStatistics().getFrameThroughput());
+            // bandwith utilization for a host
+            LOG.info("bandwidth utilization (total network footprint) : " + frameAccessorImpl.getPerformanceStatistics().getLinkBandwidth("") + " bps");
 			LOG.info("Total amount of time : " +  totalTime + " s");
-			LOG.info("---------------------------------------------------------------");
+			
+			StringBuilder resultat = new StringBuilder();
+			resultat.append(frameAccessorImpl.getPerformanceStatisticImpl().getPacketDropRate("")).append(";");
+			resultat.append(frameAccessorImpl.getPerformanceStatisticImpl().getPacketLatency("")).append(";");
+			resultat.append(frameAccessorImpl.getPerformanceStatistics().getFrameThroughput()).append(";");
+			resultat.append(frameAccessorImpl.getPerformanceStatistics().getLinkBandwidth("")).append(";");
+			resultat.append(totalTime).append(";");
+			
+			LOG.info(resultat.toString());
 
 		} catch (SocketTimeoutException e) {
 			e.printStackTrace();
