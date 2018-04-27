@@ -3,6 +3,9 @@
  */
 package se.umu.cs._5dv186.al.ens17kvr;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -26,6 +29,9 @@ public class Main {
     private static final Logger LOG = Logger.getLogger(Main.class);
     
 	public static final int DEFAULT_TIMEOUT = 1000;
+	
+	/** The location of the generated CSV files */
+	private static final String FILE_LOCATION = "resources/";
 	
 	/** Contains all the values for packet drop rate. */
 	private static List<String> packetDropRate = new ArrayList<>();
@@ -53,39 +59,43 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 //		final String host = (args.length > 0) ? args[0] : "localhost";
-		final int timeout = (args.length > 1) ? Integer.parseInt(args[1]) : DEFAULT_TIMEOUT;
+//		final int timeout = (args.length > 1) ? Integer.parseInt(args[1]) : DEFAULT_TIMEOUT;
 		final String username = (args.length > 2) ? args[2] : "test";
 
 		
 		String[] hosts = StreamServiceDiscovery.SINGLETON.findHosts(); 
 		
-		for (String host : hosts) {
-			// Only one host to tests
-			LOG.info("Test on the host " + host + " with " + timeout + " timeout for the user " + username);
+		// TODO a delete juste pour le test
+		int[] timeouts = {1000, 750, 500};
 		
-			for (Integer tn : threadsNumber) {
-				LOG.info("Number of threads use to fetch data : " + tn);
-				List<StreamServiceClient> clients = new ArrayList<>();
-	
-				try {
-	
-					for (int i = 0; i < tn; i++) {
-						StreamServiceClient client = DefaultStreamServiceClient.bind(host, timeout, username);
-						
-						clients.add(client);
-					}
-	
-					callHost(clients, timeout);
-	
-				} catch (SocketException | UnknownHostException e) {
-					e.printStackTrace();
-				}
-	
-			}
+		for (int timeout : timeouts) {
+			for (String host : hosts) {
+				// Only one host to tests
+				LOG.info("Test on the host " + host + " with " + timeout + " timeout for the user " + username);
 			
-			generatedCSVByHost(host, timeout);
+				for (Integer tn : threadsNumber) {
+					LOG.info("Number of threads use to fetch data : " + tn);
+					List<StreamServiceClient> clients = new ArrayList<>();
+		
+					try {
+		
+						for (int i = 0; i < tn; i++) {
+							StreamServiceClient client = DefaultStreamServiceClient.bind(host, timeout, username);
+							
+							clients.add(client);
+						}
+		
+						callHost(clients, timeout);
+		
+					} catch (SocketException | UnknownHostException e) {
+						e.printStackTrace();
+					}
+		
+				}
+				
+				generatedCSVByHost(host, timeout);
+			}
 		}
-
 	}
 
 	/**
@@ -161,7 +171,40 @@ public class Main {
 		getCsvData(host, timeout, data, threadsNumber.length);
 		
 		// Create the CSV File
+		// Create the file each time
+		StringBuilder fileName = new StringBuilder(FILE_LOCATION);
+		fileName.append(host).append("_").append(timeout).append(".csv");
 		
+		File file = new File(fileName.toString());
+		
+		String pathFull = file.getPath();
+
+		BufferedWriter bwFull = null;
+		FileWriter fwFull = null;
+				
+		try {
+			fwFull = new FileWriter(pathFull);
+			bwFull = new BufferedWriter(fwFull);
+			
+			// Writing content
+			if(data != null) {
+				bwFull.write(data.toString());
+			}
+			LOG.info("File created");
+		} catch (IOException e) {
+			LOG.error("Error occured during file creation " + e.getMessage());
+		} finally {
+			try {
+				if (bwFull != null) {
+					bwFull.close();
+				}
+				if (fwFull != null) {
+					fwFull.close();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -226,6 +269,7 @@ public class Main {
 		}
 		
 		data.append("\n").append(getCsvThreadData()).append("\n");
+		
 	}
 	
 	/**
@@ -237,10 +281,10 @@ public class Main {
 		StringBuilder data = new StringBuilder();
 		
 		for (int i = 0; i < threadsNumber.length; i++) {
-			data.append(threadsNumber[i]).append(";\n");
+			data.append(threadsNumber[i]).append(";");
 		}
 		
-		return data.toString();
+		return data.append("\n").toString();
 	}
 
 	/**

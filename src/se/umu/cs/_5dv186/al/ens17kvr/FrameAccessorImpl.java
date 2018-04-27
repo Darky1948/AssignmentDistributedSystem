@@ -68,7 +68,7 @@ public class FrameAccessorImpl implements FrameAccessor {
 		StreamInfo streamInfo = getStreamInfo();
 		
 		for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
-//		for (int x = 0; x < 5; x++) {
+//		for (int x = 0; x < 1; x++) {
 			for (int y = 0; y < streamInfo.getWidthInBlocks(); y++) {
 //			for (int y = 0; y < 10; y++) {
 				blockXYs.add(new BlockXY(x, y));
