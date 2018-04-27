@@ -93,9 +93,23 @@ public class Main {
 		
 				}
 				
+				// Generate the CSV for the Host and given timeout
 				generatedCSVByHost(host, timeout);
+				// Reinit the list
+				reinitList();
 			}
 		}
+	}
+
+	/**
+	 * Reinitialize the list that contains data for the CSV file.
+	 */
+	private static void reinitList() {
+		packetDropRate = new ArrayList<>();
+		packetLatency = new ArrayList<>();
+		frameThroughput = new ArrayList<>();
+		bandwidthUtilization = new ArrayList<>();
+		amountOfTime = new ArrayList<>();
 	}
 
 	/**
@@ -113,7 +127,8 @@ public class Main {
 			
 			// Fetching the StreamInfo
 			StreamInfo streamInfo = frameAccessorImpl.getStreamInfo();
-
+			frameAccessorImpl.setStreamInfo(streamInfo);
+			
 			// Fecthing the frame
 			long t1 = System.currentTimeMillis();
 			for (int i = 0; i < streamInfo.getLengthInFrames(); i++) {
@@ -331,6 +346,34 @@ public class Main {
 	 */
 	public static void setAmountOfTime(List<String> amountOfTime) {
 		Main.amountOfTime = amountOfTime;
+	}
+
+	/**
+	 * @param packetDropRate the packetDropRate to set
+	 */
+	public static void setPacketDropRate(List<String> packetDropRate) {
+		Main.packetDropRate = packetDropRate;
+	}
+
+	/**
+	 * @param packetLatency the packetLatency to set
+	 */
+	public static void setPacketLatency(List<String> packetLatency) {
+		Main.packetLatency = packetLatency;
+	}
+
+	/**
+	 * @param frameThroughput the frameThroughput to set
+	 */
+	public static void setFrameThroughput(List<String> frameThroughput) {
+		Main.frameThroughput = frameThroughput;
+	}
+
+	/**
+	 * @param bandwidthUtilization the bandwidthUtilization to set
+	 */
+	public static void setBandwidthUtilization(List<String> bandwidthUtilization) {
+		Main.bandwidthUtilization = bandwidthUtilization;
 	}
 	
 }

@@ -21,6 +21,11 @@ public class FrameAccessorImpl implements FrameAccessor {
 	 * The name of the stream.
 	 */
 	private String stream;
+	
+	/**
+	 * The stream info.
+	 */
+	private StreamInfo streamInfo;
 
 	/**
 	 * The list of clients service.
@@ -64,8 +69,6 @@ public class FrameAccessorImpl implements FrameAccessor {
 		
 		// Init the Queue to work with.
 		Queue<BlockXY> blockXYs = new ConcurrentLinkedQueue<BlockXY>();
-		
-		StreamInfo streamInfo = getStreamInfo();
 		
 		for (int x = 0; x < streamInfo.getHeightInBlocks(); x++) {
 //		for (int x = 0; x < 1; x++) {
@@ -169,4 +172,11 @@ public class FrameAccessorImpl implements FrameAccessor {
 		this.performanceStatisticImpl = performanceStatisticImpl;
 	}
 
+	/**
+	 * @param streamInfo the streamInfo to set
+	 */
+	public void setStreamInfo(StreamInfo streamInfo) {
+		this.streamInfo = streamInfo;
+	}
+	
 }
