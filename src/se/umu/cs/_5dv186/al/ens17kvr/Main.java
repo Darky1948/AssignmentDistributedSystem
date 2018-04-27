@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import ki.types.ds.StreamInfo;
 import se.umu.cs._5dv186.a1.client.DefaultStreamServiceClient;
 import se.umu.cs._5dv186.a1.client.StreamServiceClient;
-import se.umu.cs._5dv186.a1.client.StreamServiceDiscovery;
 
 /**
  * @author Kristen Viguier ens17kvr
@@ -63,7 +62,8 @@ public class Main {
 		final String username = (args.length > 2) ? args[2] : "test";
 
 		
-		String[] hosts = StreamServiceDiscovery.SINGLETON.findHosts(); 
+//		String[] hosts = StreamServiceDiscovery.SINGLETON.findHosts(); 
+		String[] hosts = {"dobby.cs.umu.se", "bellatrix.cs.umu.se", "harry.cs.umu.se"};
 		
 		// TODO a delete juste pour le test
 		int[] timeouts = {1000, 750, 500};
