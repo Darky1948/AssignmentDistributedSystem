@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import ki.types.ds.StreamInfo;
 import se.umu.cs._5dv186.a1.client.DefaultStreamServiceClient;
 import se.umu.cs._5dv186.a1.client.StreamServiceClient;
+import se.umu.cs._5dv186.a1.client.StreamServiceDiscovery;
 
 /**
  * @author Kristen Viguier ens17kvr
@@ -58,46 +59,40 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 //		final String host = (args.length > 0) ? args[0] : "localhost";
-//		final int timeout = (args.length > 1) ? Integer.parseInt(args[1]) : DEFAULT_TIMEOUT;
+		final int timeout = (args.length > 1) ? Integer.parseInt(args[1]) : DEFAULT_TIMEOUT;
 		final String username = (args.length > 2) ? args[2] : "test";
 
 		
-//		String[] hosts = StreamServiceDiscovery.SINGLETON.findHosts(); 
-		String[] hosts = {"dobby.cs.umu.se", "bellatrix.cs.umu.se", "harry.cs.umu.se"};
+		String[] hosts = StreamServiceDiscovery.SINGLETON.findHosts(); 
 		
-		// TODO a delete juste pour le test
-		int[] timeouts = {1000, 750, 500};
+		for (String host : hosts) {
+			// Only one host to tests
+			LOG.info("Test on the host " + host + " with " + timeout + " timeout for the user " + username);
 		
-		for (int timeout : timeouts) {
-			for (String host : hosts) {
-				// Only one host to tests
-				LOG.info("Test on the host " + host + " with " + timeout + " timeout for the user " + username);
-			
-				for (Integer tn : threadsNumber) {
-					LOG.info("Number of threads use to fetch data : " + tn);
-					List<StreamServiceClient> clients = new ArrayList<>();
-		
-					try {
-		
-						for (int i = 0; i < tn; i++) {
-							StreamServiceClient client = DefaultStreamServiceClient.bind(host, timeout, username);
-							
-							clients.add(client);
-						}
-		
-						callHost(clients, timeout);
-		
-					} catch (SocketException | UnknownHostException e) {
-						e.printStackTrace();
+			for (Integer tn : threadsNumber) {
+				LOG.info("Number of threads use to fetch data : " + tn);
+				List<StreamServiceClient> clients = new ArrayList<>();
+	
+				try {
+	
+					for (int i = 0; i < tn; i++) {
+						StreamServiceClient client = DefaultStreamServiceClient.bind(host, timeout, username);
+						
+						clients.add(client);
 					}
-		
+	
+					callHost(clients, timeout);
+	
+				} catch (SocketException | UnknownHostException e) {
+					e.printStackTrace();
 				}
-				
-				// Generate the CSV for the Host and given timeout
-				generatedCSVByHost(host, timeout);
-				// Reinit the list
-				reinitList();
+	
 			}
+			
+			// Generate the CSV for the Host and given timeout
+			generatedCSVByHost(host, timeout);
+			// Reinit the list
+			reinitList();
 		}
 	}
 
