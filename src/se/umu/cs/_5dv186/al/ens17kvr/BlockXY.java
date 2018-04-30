@@ -2,7 +2,14 @@ package se.umu.cs._5dv186.al.ens17kvr;
 
 import ki.types.ds.Pixel;
 
+/**
+ * Class object BlockXY to know what blocks we need to fetch.
+ * 
+ * @author Kristen VIGUIER ens17kvr
+ *
+ */
 public class BlockXY extends ki.types.ds.Block {
+	
 	/**
 	 * Represent the abscisse.
 	 */

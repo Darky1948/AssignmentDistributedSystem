@@ -21,6 +21,8 @@ import se.umu.cs._5dv186.a1.client.StreamServiceClient;
 import se.umu.cs._5dv186.a1.client.StreamServiceDiscovery;
 
 /**
+ * Main program to start the application.
+ * 
  * @author Kristen Viguier ens17kvr
  */
 public class Main {
@@ -58,16 +60,28 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		final String host = (args.length > 0) ? args[0] : "localhost";
+		final String host = (args.length > 0) ? args[0] : "localhost";
 		final int timeout = (args.length > 1) ? Integer.parseInt(args[1]) : DEFAULT_TIMEOUT;
 		final String username = (args.length > 2) ? args[2] : "test";
-
 		
-		String[] hosts = StreamServiceDiscovery.SINGLETON.findHosts(); 
 		
-		for (String host : hosts) {
+		// According the parameter either we start one single host test or the four hosts.
+		String[] tmp = StreamServiceDiscovery.SINGLETON.findHosts();
+		String[] hosts = null;
+		
+		for (int i = 0; i < tmp.length; i++) {
+			if(tmp[i].equals(host)) {
+				hosts = new String[1];
+				hosts[0] = host;
+			} else {
+				hosts = tmp;
+			}
+		}
+		
+		// Starting fetching program
+		for (String test : hosts) {
 			// Only one host to tests
-			LOG.info("Test on the host " + host + " with " + timeout + " timeout for the user " + username);
+			LOG.info("Test on the host " + test + " with " + timeout + " timeout for the user " + username);
 		
 			for (Integer tn : threadsNumber) {
 				LOG.info("Number of threads use to fetch data : " + tn);
@@ -76,7 +90,7 @@ public class Main {
 				try {
 	
 					for (int i = 0; i < tn; i++) {
-						StreamServiceClient client = DefaultStreamServiceClient.bind(host, timeout, username);
+						StreamServiceClient client = DefaultStreamServiceClient.bind(test, timeout, username);
 						
 						clients.add(client);
 					}
@@ -90,7 +104,7 @@ public class Main {
 			}
 			
 			// Generate the CSV for the Host and given timeout
-			generatedCSVByHost(host, timeout);
+			generatedCSVByHost(test, timeout);
 			// Reinit the list
 			reinitList();
 		}

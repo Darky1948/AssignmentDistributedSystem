@@ -3,6 +3,8 @@ package se.umu.cs._5dv186.al.ens17kvr;
 import se.umu.cs._5dv186.a1.client.FrameAccessor.PerformanceStatistics;
 
 /**
+ * Class that computer all the performance statistics.
+ * 
  * @author Kristen Viguier ens17kvr
  *
  */
